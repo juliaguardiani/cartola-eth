@@ -98,6 +98,12 @@ contract CasaDeApostas
 
     }
 
+    function isOwner(uint id) public view returns (bool){
+        if(_apostas[id].owner == msg.sender){
+            return true;
+        } else return false;
+      }
+
     function verRecompensa(uint id) public view returns (uint) 
     {
         uint recompensa = (_apostas[id].lances.length * _apostas[id].valorMinimo) / (_apostas[id].qtdVencedores +1 );
@@ -118,6 +124,11 @@ contract CasaDeApostas
         
         pote += recompensa;
 
+    }
+    function isWinner(uint id) public view returns (bool){
+        if(_apostas[id].winners[msg.sender].owner == msg.sender){
+            return true;
+        } else return false;
     }
 
     function getApostaOwner(uint idAposta) public view returns(address)

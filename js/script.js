@@ -1,5 +1,5 @@
 // ENDEREÇO EHTEREUM DO CONTRATO
-var contractAddress = "copiar e colar o end do contrato";
+var contractAddress = "0x44fe96BEfb85c927aaF372473519aDe5f032D10F";
 
 // Inicializa o objeto DApp
 document.addEventListener("DOMContentLoaded", onDocumentLoad);
@@ -56,57 +56,95 @@ const DApp = {
   },
 };
 
+// ---------------------------------------------------------------------------------------------
+
 
 // *** MÉTODOS (de consulta - view) DO CONTRATO ** //
-
-function verGanhador() {
- // return DApp.contracts.CasaDeApostas.methods.verGanhador().call();
+function verRecompensa() {
+ return DApp.contracts.CasaDeApostas.methods.verRecompensa().call({ from: DApp.account });
 }
 
+function getApostaOwner(){
+    return DApp.contracts.CasaDeApostas.methods.getApostaOwner().call({ from: DApp.account });
+}
+
+function ehDono(){
+    return DApp.contracts.CasaDeApostas.methods.isOwner().call({ from: DApp.account });
+  }
+
+function ehGanhador(){
+    return DApp.contracts.CasaDeApostas.methods.isWinner().call({ from: DApp.account });
+}
 
 // *** MÉTODOS (de escrita) DO CONTRATO ** //
+function criarAposta(){
 
-function criarAposta() {
-  let valor = document.getElementById("apostar").value;
-  let preco = 100000000000000000 * valor;
-  // document.getElementById("1").onclick = jogo1;
-  // document.getElementById("2").onclick = jogo2;
-  // document.getElementById("3").onclick = jogo3;
+    let time1 = document.getElementById("idtime01").value;
+    let time2 = 0;
+    if (document.getElementById("idtime02").value == 2){
+        time2 = 2;
+    }
+    if(document.getElementById("idtime02").value == 3){
+        time2 = 3;
+    }
+    if(document.getElementById("idtime02").value == 4){
+        time2 = 4;
+    }
+    if(document.getElementById("idtime02").value == 5){
+        time2 = 5;
+    }
+    let pontos1 = document.getElementById("pontos01").value;
+    let pontos2 = document.getElementById("pontos02").value; 
+    let valorMinimo = document.getElementById("valorMinimo").value;
+    let valor = 100000000000000000 * valorMinimo;
+    return DApp.contracts.CasaDeApostas.method.criarAposta(time1, pontos1, time2,
+        pontos2, valor).send({ from: DApp.account }).then(apostar);
+    }
 
-  return DApp.contracts.CasaDeApostas.methods.
-    criarAposta("falta passar os parametros corretos").
-        send({ from: DApp.account, value: preco }).then(atualizaInterface);;
+function apostar(apostaId){
+    let pontos1 = document.getElementById("pontos01").value;
+    let pontos2 = document.getElementById("pontos02").value; 
+    return DApp.contracts.CasaDeApostas.method.apostar(apostaId, pontos1,pontos2).
+        send({ from: DApp.account }).then(atualizaInterface);
 }
 
-function apostar() {
-  return DApp.contracts.CasaDeApostas.methods.apostar().
-    send({ from: DApp.account }).then(atualizaInterface);;
+function finalizarAposta() {
+    // tenta pegar o id da aposta
+    return DApp.contracts.CasaDeApostas.method.finalizarAposta(apostaId).
+    send({ from: DApp.account }).then(atualizaInterface);
+
 }
 
 // *** ATUALIZAÇÃO DO HTML *** //
 
 function inicializaInterface() {
-    document.getElementById("btnApostar").onclick = realizarAposta;
-    document.getElementById("btnPagarAposta").onclick = pagarAposta;
-    atualizaInterface(); 
+
 }
 
 function atualizaInterface() {
-   verTaxa().then((result) => {                         //criar funcao 
-    document.getElementById("taxa").innerHTML = result;
-    });
-
-  verPremio().then((result) => {               //criar funcao 
-    document.getElementById("premio").innerHTML =
-      result / 1000000000000000000 + " ETH";
+ // ver recompensa
+ verRecompensa().then((result) => {
+    document.getElementById("premio").innerHTML = result;
   });
 
-  document.getElementById("endereco").innerHTML = DApp.account;
+  getApostaOwner().then((result) => {
+    document.getElementById("ganhador").innerHTML = result;
+  });
 
-  document.getElementById("btnPagarAposta").style.display = "none";
   ehDono().then((result) => {
     if (result) {
       document.getElementById("btnPagarAposta").style.display = "block";
+    }
+  });
+  ehDono().then((result) => {
+    if (result) {
+      document.getElementById("btnFinalizarAposta").style.display = "block";
+    }
+  });
+  
+  ehGanhador().then((result) => {
+    if (result) {
+      document.getElementById("btnReceberRecompensa").style.display = "block";
     }
   });
 }

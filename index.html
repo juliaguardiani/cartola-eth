@@ -31,25 +31,48 @@
             >
             <div>
 
-                <h6 class="my-0">Escolha o jogo para apostar:</h6> <br />
-                
-                <div>
-                  <input type="checkbox" id="1" name="BrasilChile"
-                         checked>
-                  <label for="BrasilChile">Brasil X Chile </label>
-                </div>
-                <div>
-                  <input type="checkbox" id="2" name="EUAJapao">
-                  <label for="EUAJapao"> EUA X Japão</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="3" name="ItaliaFranca">
-                    <label for="ItaliaFranca"> Itália X França</label>
-                </div>
-            
+                <h6 class="my-0">Escolha o time 01:</h6>
+                <form action="">
+                    <select id="idtime01" name="time01">
+                    <option id="1" value="brasil">Brasil</option>
+                    </select>
+                </form><br />
+                <h6 class="my-0">Escolha o time 02:</h6>
+                <form action="">
+                    <select id="idtime02" name="time02">
+                    <option id="2" value="eua">EUA</option>
+                    <option id="3" value="chile">Chile</option>
+                    <option id="4" value="japao">Japão</option>
+                    <option id="5" value="franca">França</option>
+                    </select>
+                </form><br/>
+                <form>
+                    <h6 class="my-0">Pontos do time 01:</h6>
+                    <input type="text" name="pontostime01" id="pontos01"><br>
+                    <br />
+                    <h6 class="my-0">Pontos do time 02:</h6> 
+                    <input type="text" name="pontostime02" id="pontos02">
+                </form>
             </div>
               <span class="text-muted" id="total-geral"></span>
             </li>
+
+            <form class="card p-2">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="valorMinimo"
+                    placeholder="Valor mínimo da aposta..."
+                  />
+                  <div class="input-group-append">
+                    <button type="button" id="btnValorMinimo" class="btn btn-secondary">
+                      Apostar!
+                    </button>
+                  </div>
+                </div>
+            </form>
+
             <li
               class="list-group-item d-flex justify-content-between lh-condensed"
             >
@@ -64,30 +87,27 @@
               <span class="text-muted" id="ganhador"></span>
             </li>
           </ul>
-
-          <form class="card p-2">
-            <div class="input-group">
-              <input
-                type="text"
-                class="form-control"
-                id="apostar"
-                placeholder="Quanto deseja apostar..."
-              />
-              <div class="input-group-append">
-                <button type="button" id="btnApostar" class="btn btn-secondary">
-                  Criar aposta!
-                </button>
-              </div>
-            </div>
-          </form>
-          <br />
+          <button
+          type="button"
+          id="btnReceberRecompensa"
+          class="btn btn-danger btn-lg btn-block"
+        >
+          Receber a minha recompensa!
+        </button>
           <button
             type="button"
             id="btnPagarAposta"
             class="btn btn-danger btn-lg btn-block"
           >
-            Pagar a aposta!
+            Pagar aposta para o ganhador!
           </button>
+          <button
+          type="button"
+          id="btnFinalizarAposta"
+          class="btn btn-danger btn-lg btn-block"
+        >
+          Finalizar aposta!
+        </button>
         </div>
       </div>
       <br>
