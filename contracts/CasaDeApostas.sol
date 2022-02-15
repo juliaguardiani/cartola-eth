@@ -1,127 +1,127 @@
-pragma solidity ^0.8.7; 
+pragma solidity >=0.7.0 <0.9.0;
 
-contract CasaDeApostas{
+contract CasaDeApostas
+{
+    address payable owner;
+    uint pote;
 
-    address _contract_owner;
-    address payable [] _winners;
-
-    struct Lance{
-        uint jogador1;
-        uint jogador2;
-        address payable lanceOwner;
+    struct Lance
+    {
+        uint pontosTime1;
+        uint pontosTime2;
+        address payable owner;
     }
 
-    struct Aposta{
-        uint jogador1;
-        uint jogador2;
+    struct Aposta
+    {
+        uint time1;
+        uint time2;
+        address payable owner;
         uint valorMinimo;
-        uint qtdApostadores;
-        bool isValid;
-        uint taxa;
-        address apostaOwner;
-        Lance[] lances;
+        bool finalizada;
+        Lance lanceCorreto;
+        Lance [] lances;
+
+        mapping ( address => Lance) winners;
+        uint qtdVencedores;
+
     }
 
-    Aposta[] private _apostas;
-    mapping(address => uint) private _qtdApostasDoUsuario;
-    uint private _qtdApostasGlobal;
-    uint private _contractOwnerLucro;
+    // mapeia as apostas por codigo
+    Aposta[] _apostas;
 
-    constructor() 
+    constructor()
     {
-        _contract_owner = msg.sender;
-        _qtdApostasGlobal = 0;
+        owner = payable(msg.sender);
     }
 
-    modifier onlyContractOwner()
+    modifier onlyOwner()
     {
-        require(msg.sender == _contract_owner, "Essa funcao so pode ser acessada pelo dono do contrato");
-    _;
+        require(msg.sender == owner, "Only for the contract owner");
+        _;
     }
 
-    modifier onlyApostaOwner()
+    // cria uma aposta e retorna seu codigo unico
+    function criarAposta(uint time1, uint pontosTime1, uint time2,  uint pontosTime2,uint valorMinimo) public returns(uint )
     {
-        require(_qtdApostasDoUsuario[msg.sender]  > 0 , "Essa funcao so pode ser acessada por donos de aposta");
-    _;
-    }
+        require(time1 != time2, "Nao pode apostar em times igueais");
+                        
+        uint apostaId = _apostas.length;
 
-    function criarAposta(uint jogador1,uint jogador2, uint valorMinimo, uint taxa) external
-    {
-        require(taxa < valorMinimo, "A taxa precisa ser menor que a quantidade minima");
-        require(jogador1 != jogador2, "O jogador1 precisa ser diferente do jogador2");
-
-        address apostaOwner = msg.sender;
-        uint apostaId = _qtdApostasGlobal;
         _apostas.push();
-        _apostas[apostaId].jogador1 = jogador1;
-        _apostas[apostaId].jogador2 = jogador2;
-        _apostas[apostaId].valorMinimo = valorMinimo;
-        _apostas[apostaId].taxa = taxa;
-
-        _qtdApostasDoUsuario[apostaOwner]++;
-        _qtdApostasGlobal++;
-    }
-
-    function pagarAposta(uint idAposta) private onlyApostaOwner
-    {
-        require(idAposta < _apostas.length);
-        // não podemos pagar uma aposta que não foi finalizadas
-        require(_apostas[idAposta].isValid);
-
-        Aposta storage aposta = _apostas[idAposta];
-        address payable [] memory winners;
-
-        uint totalWinners = 0;
         
-        for(uint i = 0; i < aposta.lances.length; i++)
-        {
-            Lance memory lance = aposta.lances[i];
-            if (lance.jogador1 == aposta.jogador1 && lance.jogador2 == aposta.jogador2 )
-            {
-                winners[totalWinners] = lance.lanceOwner;
-                totalWinners++;
-            }
-        }
-
-        uint premio = aposta.lances.length*(aposta.valorMinimo - aposta.taxa);
-
-        for(uint i = 0; i < totalWinners ; i++)
-        {
-            winners[i].transfer(premio);
-        }
-
-        _contractOwnerLucro += aposta.taxa * aposta.lances.length;
-    }
-
-    function pagarApostas() external onlyApostaOwner
-    {
-        // pagamos todas as apostas possíveis de serem pagadas
-        for(uint i = 0; i < _apostas.length; i++)
-        {
-            pagarAposta(i);
-        }
-    }
-
-    function sacarLucroDoContrato() external payable onlyContractOwner 
-    {
-        address payable payableOwner;
-
-        payableOwner =  payable(_contract_owner);
-
-        payableOwner.transfer(_contractOwnerLucro);
+        _apostas[apostaId].time1 = time1;
+        _apostas[apostaId].time2 = time2;
+        _apostas[apostaId].owner = payable(msg.sender);
+        _apostas[apostaId].valorMinimo =  valorMinimo;
+        _apostas[apostaId].finalizada = false;
+        _apostas[apostaId].lanceCorreto.pontosTime1 = pontosTime1;
+        _apostas[apostaId].lanceCorreto.pontosTime2 = pontosTime2;
+        _apostas[apostaId].lanceCorreto.owner = payable(msg.sender);
         
+        return  apostaId;
     }
-    function apostar(uint apostaId, uint jogador1, uint jogador2) external payable
+
+    function apostar(uint id, uint pontosTime1, uint pontosTime2) public payable
     {
-        Aposta memory aposta = _apostas[apostaId];
+        require(id < _apostas.length, "id maior que o total de apostas");
+        require(_apostas[id].finalizada == false, "essa aposta ja foi finalizada");
 
-        uint qtdApostasDoUsuario = msg.value / aposta.valorMinimo;
+        uint valorMinimo = _apostas[id].valorMinimo;
 
-        for (uint i = 0; i < qtdApostasDoUsuario; i++)
+        require(msg.value >= valorMinimo, "sua aposta precisa ser maior que o valor minimo para dar um lance");
+
+        Lance memory novoLance = Lance(pontosTime2,pontosTime1, payable(msg.sender));
+        
+        uint troco = msg.value - valorMinimo;
+
+        _apostas[id].lances.push(novoLance);
+
+        payable(msg.sender).transfer(troco);
+
+        Lance memory lanceCorreto = _apostas[id].lanceCorreto;
+        if(lanceCorreto.pontosTime1 == pontosTime1 && lanceCorreto.pontosTime2 == pontosTime2)
         {
-            _apostas[apostaId].lances.push(Lance(jogador1,jogador2, payable(msg.sender)));
-            
+            _apostas[id].winners[msg.sender].pontosTime1 = pontosTime1;
+            _apostas[id].winners[msg.sender].pontosTime2 = pontosTime2;
+            _apostas[id].winners[msg.sender].owner = payable(msg.sender);
+
+            _apostas[id].qtdVencedores++;
         }
 
+    }
+    
+    function finalizarAposta(uint id) public
+    {
+        require(_apostas[id].owner == msg.sender);
+        _apostas[id].finalizada = true;
+
+    }
+
+    function verRecompensa(uint id) public view returns (uint) 
+    {
+        uint recompensa = (_apostas[id].lances.length * _apostas[id].valorMinimo) / (_apostas[id].qtdVencedores +1 );
+
+        return recompensa;
+    }
+
+    function receberMinhaRecompensa(uint id) public {
+        
+        require(_apostas[id].finalizada == true, "requer aposta finalizada");
+        require(_apostas[id].winners[msg.sender].owner == msg.sender , "Voce precisa vencer para receber o premio");
+
+        uint recompensa = verRecompensa(id);
+
+        payable(msg.sender).transfer(recompensa);
+
+        delete _apostas[id].winners[msg.sender]; 
+        
+        pote += recompensa;
+
+    }
+
+    function getApostaOwner(uint idAposta) public view returns(address)
+    {
+        return _apostas[idAposta].owner;
     }
 }
