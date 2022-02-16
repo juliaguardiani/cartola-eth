@@ -19,79 +19,115 @@
       <div class="col-md order-md mb">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-muted">Cartola ETH</span>
-          <span class="badge badge-secondary badge-pill" id="taxa">Taxa da aposta: -</span>
         </h4>
-        <ul class="list-group mb-3">
-          <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
 
-              <h6 class="my-0">Escolha o time 01:</h6>
-              <form action="">
-                <select id="idtime01" name="time01">
-                  <option id="1" value="brasil">Brasil</option>
-                </select>
-              </form><br />
-              <h6 class="my-0">Escolha o time 02:</h6>
-              <form action="">
-                <select id="idtime02" name="time02">
-                  <option id="2" value="eua">EUA</option>
-                  <option id="3" value="chile">Chile</option>
-                  <option id="4" value="japao">Japão</option>
-                  <option id="5" value="franca">França</option>
-                </select>
-              </form><br />
-              <form>
-                <h6 class="my-0">Pontos do time 01:</h6>
-                <input type="text" name="pontostime01" id="pontos01"><br>
+        <div class="contractSection">
+          <div style="display: flex; flex-direction: row; justify-content: space-between; padding-left: 40%;">
+            <h4 class="text-muted"><em>Criaçao de aposta</em></h4>
+            <button type="button" class="collapsibleCriarAposta" onclick="collapseCriarAposta()">
+              - </button>
+          </div>
+          <ul class="list-criar-aposta mb-3" class="list-criar-aposta">
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">Escolha o time 01:</h6>
+                <form action="">
+                  <select id="idtime01" name="time01">
+                    <option id="1" value="brasil">Brasil</option>
+                  </select>
+                </form><br />
+                <h6 class="my-0">Escolha o time 02:</h6>
+                <form action="">
+                  <select id="idtime02" name="time02">
+                    <option id="2" value="eua">EUA</option>
+                    <option id="3" value="chile">Chile</option>
+                    <option id="4" value="japao">Japão</option>
+                    <option id="5" value="franca">França</option>
+                  </select>
+                </form><br />
+                <form>
+                  <h6 class="my-0">Pontos do time 01:</h6>
+                  <input type="text" name="pontostime01" id="pontos01"><br>
+                  <br />
+                  <h6 class="my-0">Pontos do time 02:</h6>
+                  <input type="text" name="pontostime02" id="pontos02">
+                </form>
+              </div>
+              <span class="text-muted" id="total-geral"></span>
+            </li>
+
+            <form class="card p-2">
+              <div class="input-group">
+                <input type="text" class="form-control" id="valorMinimo" placeholder="Valor mínimo da aposta..." />
+                <div class="input-group-append">
+                  <button type="button" id="btnCriarAposta" class="btn btn-secondary">
+                    Criar Aposta
+                  </button>
+                </div>
+              </div>
+        </div>
+
+        <div class="contractSection">
+          <div style="display: flex; flex-direction: row; justify-content: space-between; padding-left: 40%;">
+            <h4 class="text-muted"><em>Apostar</em></h4>
+            <button type="button" class="collapsibleCriarAposta" onclick="collapseCriarAposta()">
+              - </button>
+          </div>
+          <ul class="list-criar-aposta mb-3" class="list-criar-aposta">
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div style="display: flex; flex-direction: row;">
+                <h6 class="my-0" style="padding-right: 10px;">Escolha o id da aposta:</h6>
+                <form action="">
+                  <select id="ApostarIdAposta">
+                    <option>0</option>
+                  </select>
+                </form>
                 <br />
-                <h6 class="my-0">Pontos do time 02:</h6>
-                <input type="text" name="pontostime02" id="pontos02">
-              </form>
-            </div>
-            <span class="text-muted" id="total-geral"></span>
-          </li>
+              </div>
+            </li>
 
-          <form class="card p-2">
-            <div class="input-group">
-              <input type="text" class="form-control" id="valorMinimo" placeholder="Valor mínimo da aposta..." />
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div style="display: flex; flex-direction: row;">
+                <h6 class="my-0" style="padding-right: 10px;">A pontuacao do time 1:</h6>
+                <input placeholder="0" />
+                <br />
+              </div>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div style="display: flex; flex-direction: row;">
+                <h6 class="my-0" style="padding-right: 10px;">A pontuacao do time 2:</h6>
+                <input placeholder="0" />
+                <br />
+              </div>
+            </li>
+
+            <form class="card p-2">
               <div class="input-group-append">
-                <button type="button" id="btnCriarAposta" class="btn btn-secondary">
-                  Criar Aposta
+                <button type="button" id="btnApostar" class="btn btn-secondary">
+                  Apostar
                 </button>
               </div>
-            </div>
-          </form>
+            </form>
+        </div>
 
-          <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-              <h6 class="my-0">Prêmio do vencedor: </h6>
-              <small class="text-muted">em ether</small>
-            </div>
-            <span class="text-muted" id="premio"></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <h6 class="my-0">Ganhador:</h6>
-            <span class="text-muted" id="ganhador"></span>
-          </li>
-        </ul>
-        <button type="button" id="btnReceberRecompensa" class="btn btn-danger btn-lg btn-block">
-          Receber a minha recompensa!
-        </button>
-        <button type="button" id="btnPagarAposta" class="btn btn-danger btn-lg btn-block">
-          Pagar aposta para o ganhador!
-        </button>
-        <button type="button" id="btnFinalizarAposta" class="btn btn-danger btn-lg btn-block">
-          Finalizar aposta!
-        </button>
+        </form>
       </div>
+      <br>
     </div>
-    <br>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-  <script src="js/abi.js"></script>
-  <script type="module" src="js/data.js"></script>
-  <script type="module" src="js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="js/abi.js"></script>
+    <script type="module" src="js/data.js"></script>
+    <script type="module" src="js/script.js"></script>
+
+    <script>
+      function collapseCriarAposta() {
+        listCriarAposta = document.getElementsByClassName("list-criar-aposta")[0];
+        listCriarAposta.style.display = listCriarAposta.style.display == 'none' ? 'block' : 'none';
+      }
+
+    </script>
 </body>
 
 </html>
