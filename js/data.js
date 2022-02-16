@@ -3,6 +3,9 @@ let times = {
     "eua": 1,
 }
 
-let idApostas = [];
+let apostas = [];
 
-export { times, idApostas };
+// vamos deixar o valor da aposta o mesmo (por enquanto)
+const valorAposta = 1000000000000000;
+
+export { times, apostas, valorAposta };
