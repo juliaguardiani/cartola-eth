@@ -3,4 +3,6 @@ let times = {
     "eua": 1,
 }
 
-export { times };
+let idApostas = [];
+
+export { times, idApostas };
