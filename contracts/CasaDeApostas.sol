@@ -5,6 +5,9 @@ contract CasaDeApostas
     address payable owner;
     uint pote;
 
+    event EventApostaCriada(uint idAposta);
+    event EventQtdApostas(uint qtdApostas);
+
     struct Lance
     {
         uint pontosTime1;
@@ -42,7 +45,7 @@ contract CasaDeApostas
     }
 
     // cria uma aposta e retorna seu codigo unico
-    function criarAposta(uint time1, uint pontosTime1, uint time2,  uint pontosTime2,uint valorMinimo) public returns(uint )
+    function criarAposta(uint time1, uint pontosTime1, uint time2,  uint pontosTime2,uint valorMinimo) public
     {
         require(time1 != time2, "Nao pode apostar em times igueais");
                         
@@ -59,7 +62,7 @@ contract CasaDeApostas
         _apostas[apostaId].lanceCorreto.pontosTime2 = pontosTime2;
         _apostas[apostaId].lanceCorreto.owner = payable(msg.sender);
         
-        return  apostaId;
+        emit EventApostaCriada(apostaId);
     }
 
     function apostar(uint id, uint pontosTime1, uint pontosTime2) public payable
@@ -134,5 +137,11 @@ contract CasaDeApostas
     function getApostaOwner(uint idAposta) public view returns(address)
     {
         return _apostas[idAposta].owner;
+    }
+
+    function getQtdApostas() public
+    {
+        uint qtdApostas = _apostas.length;
+        emit EventQtdApostas(qtdApostas);
     }
 }
