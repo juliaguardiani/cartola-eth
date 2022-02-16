@@ -1,120 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Cartola</title>
-    <link
-      href="https://fonts.googleapis.com/css?family=Open Sans:400,700"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-  </head>
 
-  <body class="bg-light">
-    <div class="container">
-      <div class="py-5 text-center">
-        <h2>FORMULÁRIO DE APOSTA</h2>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Cartola</title>
 
-      <div class="row">
-        <div class="col-md order-md mb">
-          <h4 class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-muted">Cartola ETH</span>
-            <span class="badge badge-secondary badge-pill" id="taxa"
-              >Taxa da aposta: -</span
-            >
-          </h4>
-          <ul class="list-group mb-3">
-            <li
-              class="list-group-item d-flex justify-content-between lh-condensed"
-            >
-            <div>
+  <link href="https://fonts.googleapis.com/css?family=Open Sans:400,700" rel="stylesheet" type="text/css" />
+  <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+</head>
 
-                <h6 class="my-0">Escolha o time 01:</h6>
-                <form action="">
-                    <select id="idtime01" name="time01">
-                    <option id="1" value="brasil">Brasil</option>
-                    </select>
-                </form><br />
-                <h6 class="my-0">Escolha o time 02:</h6>
-                <form action="">
-                    <select id="idtime02" name="time02">
-                    <option id="2" value="eua">EUA</option>
-                    <option id="3" value="chile">Chile</option>
-                    <option id="4" value="japao">Japão</option>
-                    <option id="5" value="franca">França</option>
-                    </select>
-                </form><br/>
-                <form>
-                    <h6 class="my-0">Pontos do time 01:</h6>
-                    <input type="text" name="pontostime01" id="pontos01"><br>
-                    <br />
-                    <h6 class="my-0">Pontos do time 02:</h6> 
-                    <input type="text" name="pontostime02" id="pontos02">
-                </form>
-            </div>
-              <span class="text-muted" id="total-geral"></span>
-            </li>
-
-            <form class="card p-2">
-                <div class="input-group">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="valorMinimo"
-                    placeholder="Valor mínimo da aposta..."
-                  />
-                  <div class="input-group-append">
-                    <button type="button" id="btnValorMinimo" class="btn btn-secondary">
-                      Apostar!
-                    </button>
-                  </div>
-                </div>
-            </form>
-
-            <li
-              class="list-group-item d-flex justify-content-between lh-condensed"
-            >
-              <div>
-                <h6 class="my-0">Prêmio do vencedor: </h6>
-                <small class="text-muted">em ether</small>
-              </div>
-              <span class="text-muted" id="premio"></span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
-              <h6 class="my-0">Ganhador:</h6>
-              <span class="text-muted" id="ganhador"></span>
-            </li>
-          </ul>
-          <button
-          type="button"
-          id="btnReceberRecompensa"
-          class="btn btn-danger btn-lg btn-block"
-        >
-          Receber a minha recompensa!
-        </button>
-          <button
-            type="button"
-            id="btnPagarAposta"
-            class="btn btn-danger btn-lg btn-block"
-          >
-            Pagar aposta para o ganhador!
-          </button>
-          <button
-          type="button"
-          id="btnFinalizarAposta"
-          class="btn btn-danger btn-lg btn-block"
-        >
-          Finalizar aposta!
-        </button>
-        </div>
-      </div>
-      <br>
+<body class="bg-light">
+  <div class="container">
+    <div class="py-5 text-center">
+      <h2>FORMULÁRIO DE APOSTA</h2>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="js/abi.js"></script>
-    <script src="js/script.js"></script>
-  </body>
+    <div class="row">
+      <div class="col-md order-md mb">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Cartola ETH</span>
+          <span class="badge badge-secondary badge-pill" id="taxa">Taxa da aposta: -</span>
+        </h4>
+        <ul class="list-group mb-3">
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+
+              <h6 class="my-0">Escolha o time 01:</h6>
+              <form action="">
+                <select id="idtime01" name="time01">
+                  <option id="1" value="brasil">Brasil</option>
+                </select>
+              </form><br />
+              <h6 class="my-0">Escolha o time 02:</h6>
+              <form action="">
+                <select id="idtime02" name="time02">
+                  <option id="2" value="eua">EUA</option>
+                  <option id="3" value="chile">Chile</option>
+                  <option id="4" value="japao">Japão</option>
+                  <option id="5" value="franca">França</option>
+                </select>
+              </form><br />
+              <form>
+                <h6 class="my-0">Pontos do time 01:</h6>
+                <input type="text" name="pontostime01" id="pontos01"><br>
+                <br />
+                <h6 class="my-0">Pontos do time 02:</h6>
+                <input type="text" name="pontostime02" id="pontos02">
+              </form>
+            </div>
+            <span class="text-muted" id="total-geral"></span>
+          </li>
+
+          <form class="card p-2">
+            <div class="input-group">
+              <input type="text" class="form-control" id="valorMinimo" placeholder="Valor mínimo da aposta..." />
+              <div class="input-group-append">
+                <button type="button" id="btnCriarAposta" class="btn btn-secondary">
+                  Criar Aposta
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Prêmio do vencedor: </h6>
+              <small class="text-muted">em ether</small>
+            </div>
+            <span class="text-muted" id="premio"></span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <h6 class="my-0">Ganhador:</h6>
+            <span class="text-muted" id="ganhador"></span>
+          </li>
+        </ul>
+        <button type="button" id="btnReceberRecompensa" class="btn btn-danger btn-lg btn-block">
+          Receber a minha recompensa!
+        </button>
+        <button type="button" id="btnPagarAposta" class="btn btn-danger btn-lg btn-block">
+          Pagar aposta para o ganhador!
+        </button>
+        <button type="button" id="btnFinalizarAposta" class="btn btn-danger btn-lg btn-block">
+          Finalizar aposta!
+        </button>
+      </div>
+    </div>
+    <br>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script type="module" src="js/data.js"></script>
+  <script type="module" src="js/script.js"></script>
+</body>
+
 </html>
