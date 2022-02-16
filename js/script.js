@@ -1,5 +1,6 @@
+import { times } from "./data.js"
 // ENDEREÇO EHTEREUM DO CONTRATO
-var contractAddress = "0x8eaf928fc35a81cbe69d68575ae468a50c0fd6a5";
+var contractAddress = "0xB91623804a08e7F9dcA48CE69507A4A886979F77";
 
 // Inicializa o objeto DApp
 document.addEventListener("DOMContentLoaded", onDocumentLoad);
@@ -39,7 +40,7 @@ const DApp = {
   },
 
   // Atualiza 'DApp.account' para a conta ativa no Metamask
-  updateAccount: async function() {
+  updateAccount: async function () {
     DApp.account = (await DApp.web3.eth.getAccounts())[0];
     atualizaInterface();
   },
@@ -61,56 +62,61 @@ const DApp = {
 
 // *** MÉTODOS (de consulta - view) DO CONTRATO ** //
 function verRecompensa() {
- return DApp.contracts.CasaDeApostas.methods.verRecompensa().call({ from: DApp.account });
+  return DApp.contracts.CasaDeApostas.methods.verRecompensa().call({ from: DApp.account });
 }
 
-function getApostaOwner(){
-    return DApp.contracts.CasaDeApostas.methods.getApostaOwner().call({ from: DApp.account });
+function getApostaOwner() {
+  return DApp.contracts.CasaDeApostas.methods.getApostaOwner().call({ from: DApp.account });
 }
 
-function ehDono(){
-    return DApp.contracts.CasaDeApostas.methods.isOwner().call({ from: DApp.account });
-  }
+function ehDono() {
+  return DApp.contracts.CasaDeApostas.methods.isOwner().call({ from: DApp.account });
+}
 
-function ehGanhador(){
-    return DApp.contracts.CasaDeApostas.methods.isWinner().call({ from: DApp.account });
+function ehGanhador() {
+  return DApp.contracts.CasaDeApostas.methods.isWinner().call({ from: DApp.account });
 }
 
 // *** MÉTODOS (de escrita) DO CONTRATO ** //
-function criarAposta(){
+function criarAposta() {
 
-    let time1 = document.getElementById("idtime01").value;
-    let time2 = 0;
-    if (document.getElementById("idtime02").value == 2){
-        time2 = 2;
-    }
-    if(document.getElementById("idtime02").value == 3){
-        time2 = 3;
-    }
-    if(document.getElementById("idtime02").value == 4){
-        time2 = 4;
-    }
-    if(document.getElementById("idtime02").value == 5){
-        time2 = 5;
-    }
-    let pontos1 = document.getElementById("pontos01").value;
-    let pontos2 = document.getElementById("pontos02").value; 
-    let valorMinimo = document.getElementById("valorMinimo").value;
-    let valor = 100000000000000000 * valorMinimo;
-    return DApp.contracts.CasaDeApostas.method.criarAposta(time1, pontos1, time2,
-        pontos2, valor).send({ from: DApp.account }).then(apostar);
-    }
+  let time1 = times[document.getElementById("idtime01").value.toLowerCase()];
+  let time2 = times[document.getElementById("idtime02").value.toLowerCase()];
 
-function apostar(apostaId){
-    let pontos1 = document.getElementById("pontos01").value;
-    let pontos2 = document.getElementById("pontos02").value; 
-    return DApp.contracts.CasaDeApostas.method.apostar(apostaId, pontos1,pontos2).
-        send({ from: DApp.account }).then(atualizaInterface);
+  let pontos1 = parseInt(document.getElementById("pontos01").value);
+  let pontos2 = parseInt(document.getElementById("pontos02").value);
+  let valorMinimo = document.getElementById("valorMinimo").value;
+  let valor = BigInt(100000000000000000 * valorMinimo);
+
+  if (time1 == undefined || time2 == undefined || pontos1 == undefined || pontos2 == undefined
+    || valor == undefined) {
+    console.log({
+      'time1': time1,
+      'time2': time2,
+      'pontos1': pontos1,
+      'pontos2': pontos2,
+      'valorMinimo': valor
+    });
+    alert('dado invalido');
+  }
+
+  return DApp.contracts.CasaDeApostas.methods.criarAposta(time1, pontos1, time2,
+    pontos2, valor).send({ from: DApp.account }).then((idAposta) => {
+      console.log("apostado");
+      console.log(idAposta)
+    });
+}
+
+function apostar(apostaId) {
+  let pontos1 = document.getElementById("pontos01").value;
+  let pontos2 = document.getElementById("pontos02").value;
+  return DApp.contracts.CasaDeApostas.methods.apostar(apostaId, pontos1, pontos2).
+    send({ from: DApp.account }).then(atualizaInterface);
 }
 
 function finalizarAposta() {
-    // tenta pegar o id da aposta
-    return DApp.contracts.CasaDeApostas.method.finalizarAposta(apostaId).
+  // tenta pegar o id da aposta
+  return DApp.contracts.CasaDeApostas.method.finalizarAposta(apostaId).
     send({ from: DApp.account }).then(atualizaInterface);
 
 }
@@ -118,33 +124,10 @@ function finalizarAposta() {
 // *** ATUALIZAÇÃO DO HTML *** //
 
 function inicializaInterface() {
-
+  document.getElementById("btnCriarAposta").onclick = criarAposta;
+  console.log(DApp.contracts.CasaDeApostas.events.EventApostaCriada)
+  atualizaInterface();
 }
 
 function atualizaInterface() {
- // ver recompensa
- verRecompensa().then((result) => {
-    document.getElementById("premio").innerHTML = result;
-  });
-
-  getApostaOwner().then((result) => {
-    document.getElementById("ganhador").innerHTML = result;
-  });
-
-  ehDono().then((result) => {
-    if (result) {
-      document.getElementById("btnPagarAposta").style.display = "block";
-    }
-  });
-  ehDono().then((result) => {
-    if (result) {
-      document.getElementById("btnFinalizarAposta").style.display = "block";
-    }
-  });
-  
-  ehGanhador().then((result) => {
-    if (result) {
-      document.getElementById("btnReceberRecompensa").style.display = "block";
-    }
-  });
 }
