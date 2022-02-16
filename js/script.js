@@ -1,6 +1,6 @@
-import { times } from "./data.js"
+import { times, idApostas } from "./data.js"
 // ENDEREÇO EHTEREUM DO CONTRATO
-var contractAddress = "0xB91623804a08e7F9dcA48CE69507A4A886979F77";
+var contractAddress = "0xc0AC0A2e41c7d4078e59865351ccB6b97bDA5D90";
 
 // Inicializa o objeto DApp
 document.addEventListener("DOMContentLoaded", onDocumentLoad);
@@ -101,9 +101,12 @@ function criarAposta() {
   }
 
   return DApp.contracts.CasaDeApostas.methods.criarAposta(time1, pontos1, time2,
-    pontos2, valor).send({ from: DApp.account }).then((idAposta) => {
-      console.log("apostado");
-      console.log(idAposta)
+    pontos2, valor).send({ from: DApp.account }).then((transacao) => {
+
+      let idAposta = parseInt(transacao.events['0'].raw.data);
+      idApostas.push(idAposta);
+
+      alert(`aposta ${idAposta} criada`)
     });
 }
 
@@ -125,7 +128,6 @@ function finalizarAposta() {
 
 function inicializaInterface() {
   document.getElementById("btnCriarAposta").onclick = criarAposta;
-  console.log(DApp.contracts.CasaDeApostas.events.EventApostaCriada)
   atualizaInterface();
 }
 
