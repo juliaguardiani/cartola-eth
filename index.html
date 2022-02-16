@@ -70,10 +70,10 @@
         <div class="contractSection">
           <div style="display: flex; flex-direction: row; justify-content: space-between; padding-left: 40%;">
             <h4 class="text-muted"><em>Apostar</em></h4>
-            <button type="button" class="collapsibleCriarAposta" onclick="collapseCriarAposta()">
+            <button type="button" class="collapseApostarBtn" onclick="collapseApostar()">
               - </button>
           </div>
-          <ul class="list-criar-aposta mb-3" class="list-criar-aposta">
+          <ul class="list-apostar mb-3" class="list-apostar">
             <li class="list-group-item d-flex justify-content-between lh-condensed">
               <div style="display: flex; flex-direction: row;">
                 <h6 class="my-0" style="padding-right: 10px;">Escolha o id da aposta:</h6>
@@ -89,7 +89,7 @@
             <li class="list-group-item d-flex justify-content-between lh-condensed">
               <div style="display: flex; flex-direction: row;">
                 <h6 class="my-0" style="padding-right: 10px;">A pontuacao do time 1:</h6>
-                <input placeholder="0" />
+                <input id="ApostarPontuacao1" placeholder="0" />
                 <br />
               </div>
             </li>
@@ -97,7 +97,7 @@
             <li class="list-group-item d-flex justify-content-between lh-condensed">
               <div style="display: flex; flex-direction: row;">
                 <h6 class="my-0" style="padding-right: 10px;">A pontuacao do time 2:</h6>
-                <input placeholder="0" />
+                <input id="ApostarPontuacao2" placeholder="0" />
                 <br />
               </div>
             </li>
@@ -125,6 +125,10 @@
       function collapseCriarAposta() {
         listCriarAposta = document.getElementsByClassName("list-criar-aposta")[0];
         listCriarAposta.style.display = listCriarAposta.style.display == 'none' ? 'block' : 'none';
+      }
+      function collapseApostar() {
+        listApostar = document.getElementsByClassName("list-apostar")[0];
+        listApostar.style.display = listApostar.style.display == 'none' ? 'block' : 'none';
       }
 
     </script>
