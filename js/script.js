@@ -27,6 +27,7 @@ const DApp = {
         });
         DApp.account = accounts[0];
         window.ethereum.on('accountsChanged', DApp.updateAccount); // Atualiza se o usuário trcar de conta no Metamaslk
+        console.log("conectado ao contrato")
       } catch (error) {
         console.error("Usuário negou acesso ao web3!");
         return;
@@ -123,8 +124,8 @@ function criarAposta() {
 
 function apostar() {
   let select = document.getElementById("ApostarIdAposta");
-
   let apostaId = parseInt(select.options[select.selectedIndex].text);
+
   let pontos1 = parseInt(document.getElementById("ApostarPontuacao1").value);
   let pontos2 = parseInt(document.getElementById("ApostarPontuacao2").value);
 
@@ -138,15 +139,20 @@ function apostar() {
   }
   console.log('valor da aposta: ' + valorAposta)
   return DApp.contracts.CasaDeApostas.methods.apostar(apostaId, pontos1, pontos2).
-    send({ from: DApp.account, value: valorAposta }).then(() => {
+    send({ from: DApp.account, value: valorAposta }).then((transaction) => {
       alert("Aposta realizada!");
     });
 }
 
 function finalizarAposta() {
-  // tenta pegar o id da aposta
-  return DApp.contracts.CasaDeApostas.method.finalizarAposta(apostaId).
-    send({ from: DApp.account }).then(atualizaInterface);
+  let select = document.getElementById("FinalizarIdAposta");
+  let apostaId = parseInt(select.options[select.selectedIndex].text);
+
+  return DApp.contracts.CasaDeApostas.methods.finalizarAposta(apostaId).
+    send({ from: DApp.account }).then((transaction) => {
+      alert("Aposta finalizada!");
+      atualizaInterface()
+    });
 
 }
 
@@ -154,8 +160,8 @@ function finalizarAposta() {
 
 function inicializaInterface() {
   document.getElementById("btnCriarAposta").onclick = criarAposta;
-  document.getElementById("btnApostar").onclick = apostar
-    ;
+  document.getElementById("btnApostar").onclick = apostar;
+  document.getElementById("btnFinalizar").onclick = finalizarAposta;
   atualizaInterface();
 }
 
@@ -169,17 +175,18 @@ function removeOptions(selectElement) {
 function atualizaInterface() {
 
   removeOptions(document.getElementById("ApostarIdAposta"));
+  removeOptions(document.getElementById("FinalizarIdAposta"));
 
   apostas.forEach(aposta => {
 
-    let select = document.getElementById("ApostarIdAposta");
+    let selectorsIdAposta = document.getElementsByClassName("selectorsIdAposta");
 
-    let option = document.createElement("option")
-
-    option.value = aposta.idAposta;
-    option.innerHTML = aposta.idAposta;
-
-    select.appendChild(option)
+    Array.from(selectorsIdAposta).forEach(selector => {
+      let option = document.createElement("option");
+      option.value = aposta.idAposta;
+      option.innerHTML = aposta.idAposta;
+      selector.append(option);
+    })
 
     console.log(`aposta  ${aposta.idAposta} adicionada a lista`)
   })
