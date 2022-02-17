@@ -1,6 +1,6 @@
 import { times, apostas, valorAposta } from "./data.js"
 // ENDEREÇO EHTEREUM DO CONTRATO
-var contractAddress = "0xd303A48fD06066B94B4d705e9B6CE174A2b3df81";
+var contractAddress = "0x1365dAb14Ac6624aFF122Be4c42720F3A83BeAC8"; 
 
 // Inicializa o objeto DApp
 document.addEventListener("DOMContentLoaded", onDocumentLoad);
@@ -27,6 +27,7 @@ const DApp = {
         });
         DApp.account = accounts[0];
         window.ethereum.on('accountsChanged', DApp.updateAccount); // Atualiza se o usuário trcar de conta no Metamaslk
+        console.log("conectado ao contrato")
       } catch (error) {
         console.error("Usuário negou acesso ao web3!");
         return;
@@ -62,10 +63,10 @@ const DApp = {
 
 // *** MÉTODOS (de consulta - view) DO CONTRATO ** //
 
-function verRecompensa() {
-  return DApp.contracts.CasaDeApostas.methods.verRecompensa().call();
+function verRecompensa(id) {
+  return DApp.contracts.CasaDeApostas.methods.verRecompensa(id).call();
 }
- 
+
 // *** MÉTODOS (de escrita) DO CONTRATO ** //
 function criarAposta() {
 
@@ -105,17 +106,16 @@ function criarAposta() {
       };
       apostas.push(aposta);
 
-
       alert(`aposta ${idAposta} criada`)
-      alert('dado invalido');
       atualizaInterface()
     });
 }
 
 function apostar() {
   let select = document.getElementById("ApostarIdAposta");
-
   let apostaId = parseInt(select.options[select.selectedIndex].text);
+
+
   let pontos1 = parseInt(document.getElementById("ApostarPontuacao1").value);
   let pontos2 = parseInt(document.getElementById("ApostarPontuacao2").value);
 
@@ -128,26 +128,45 @@ function apostar() {
     return;
   }
   console.log('valor da aposta: ' + valorAposta)
-  
   return DApp.contracts.CasaDeApostas.methods.apostar(apostaId, pontos1, pontos2).
-    send({ from: DApp.account, value: valorAposta }).then(() => {
+    send({ from: DApp.account, value: valorAposta }).then((transaction) => {
       alert("Aposta realizada!");
+    
+      verRecompensa(apostaId).then((result) => {
+        document.getElementById("idValorRecompensaGeral").innerHTML = result;
+        });
     });
 }
 
 function finalizarAposta() {
-  // tenta pegar o id da aposta
-  return DApp.contracts.CasaDeApostas.method.finalizarAposta(apostaId).
-    send({ from: DApp.account }).then(atualizaInterface);
+  let select = document.getElementById("FinalizarIdAposta");
+  let apostaId = parseInt(select.options[select.selectedIndex].text);
 
+  return DApp.contracts.CasaDeApostas.methods.finalizarAposta(apostaId).
+    send({ from: DApp.account }).then((transaction) => {
+      alert("Aposta finalizada!");
+      atualizaInterface()
+    });
+
+}
+function receberMinhaRecompensa(){
+  let select = document.getElementById("RRIdAposta");
+  let apostaId = parseInt(select.options[select.selectedIndex].text);
+
+  return DApp.contracts.CasaDeApostas.methods.receberMinhaRecompensa(apostaId).
+    send({ from: DApp.account }).then((transaction) => {
+      atualizaInterface()
+  });
 }
 
 // *** ATUALIZAÇÃO DO HTML *** //
 
 function inicializaInterface() {
   document.getElementById("btnCriarAposta").onclick = criarAposta;
-  document.getElementById("btnApostar").onclick = apostar
-    ;
+  document.getElementById("btnApostar").onclick = apostar;
+  document.getElementById("btnFinalizar").onclick = finalizarAposta;
+  document.getElementById("btnRR").onclick = receberMinhaRecompensa;
+  
   atualizaInterface();
 }
 
@@ -159,26 +178,21 @@ function removeOptions(selectElement) {
 }
 
 function atualizaInterface() {
+
   removeOptions(document.getElementById("ApostarIdAposta"));
+  removeOptions(document.getElementById("FinalizarIdAposta"));
 
-  verRecompensa().then((result) => {
-    document.getElementById("idValorRecompensaGeral").innerHTML = result;
-  });
-
-  alert("Aposta realizada!");
-  
   apostas.forEach(aposta => {
-    let select = document.getElementById("ApostarIdAposta");
 
-    let option = document.createElement("option")
+    let selectorsIdAposta = document.getElementsByClassName("selectorsIdAposta");
 
-    option.value = aposta.idAposta;
-    option.innerHTML = aposta.idAposta;
+    Array.from(selectorsIdAposta).forEach(selector => {
+      let option = document.createElement("option");
+      option.value = aposta.idAposta;
+      option.innerHTML = aposta.idAposta;
+      selector.append(option);
+    })
 
-    select.appendChild(optaposta.idApostaion)
-
-    console.log(`aposta  ${aposta.idAposta} adicionada a lista`) 
-
+    console.log(`aposta  ${aposta.idAposta} adicionada a lista`)
   })
-
 }
