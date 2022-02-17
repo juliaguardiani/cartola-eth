@@ -1,6 +1,6 @@
 import { times, apostas, valorAposta } from "./data.js"
 // ENDEREÇO EHTEREUM DO CONTRATO
-var contractAddress = "0xc0AC0A2e41c7d4078e59865351ccB6b97bDA5D90";
+var contractAddress = "0xd303A48fD06066B94B4d705e9B6CE174A2b3df81";
 
 // Inicializa o objeto DApp
 document.addEventListener("DOMContentLoaded", onDocumentLoad);
@@ -61,22 +61,11 @@ const DApp = {
 
 
 // *** MÉTODOS (de consulta - view) DO CONTRATO ** //
+
 function verRecompensa() {
-  return DApp.contracts.CasaDeApostas.methods.verRecompensa().call({ from: DApp.account });
+  return DApp.contracts.CasaDeApostas.methods.verRecompensa().call();
 }
-
-function getApostaOwner() {
-  return DApp.contracts.CasaDeApostas.methods.getApostaOwner().call({ from: DApp.account });
-}
-
-function ehDono() {
-  return DApp.contracts.CasaDeApostas.methods.isOwner().call({ from: DApp.account });
-}
-
-function ehGanhador() {
-  return DApp.contracts.CasaDeApostas.methods.isWinner().call({ from: DApp.account });
-}
-
+ 
 // *** MÉTODOS (de escrita) DO CONTRATO ** //
 function criarAposta() {
 
@@ -116,7 +105,9 @@ function criarAposta() {
       };
       apostas.push(aposta);
 
+
       alert(`aposta ${idAposta} criada`)
+      alert('dado invalido');
       atualizaInterface()
     });
 }
@@ -137,6 +128,7 @@ function apostar() {
     return;
   }
   console.log('valor da aposta: ' + valorAposta)
+  
   return DApp.contracts.CasaDeApostas.methods.apostar(apostaId, pontos1, pontos2).
     send({ from: DApp.account, value: valorAposta }).then(() => {
       alert("Aposta realizada!");
@@ -167,11 +159,15 @@ function removeOptions(selectElement) {
 }
 
 function atualizaInterface() {
-
   removeOptions(document.getElementById("ApostarIdAposta"));
 
-  apostas.forEach(aposta => {
+  verRecompensa().then((result) => {
+    document.getElementById("idValorRecompensaGeral").innerHTML = result;
+  });
 
+  alert("Aposta realizada!");
+  
+  apostas.forEach(aposta => {
     let select = document.getElementById("ApostarIdAposta");
 
     let option = document.createElement("option")
@@ -179,8 +175,10 @@ function atualizaInterface() {
     option.value = aposta.idAposta;
     option.innerHTML = aposta.idAposta;
 
-    select.appendChild(option)
+    select.appendChild(optaposta.idApostaion)
 
-    console.log(`aposta  ${aposta.idAposta} adicionada a lista`)
+    console.log(`aposta  ${aposta.idAposta} adicionada a lista`) 
+
   })
+
 }
