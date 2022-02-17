@@ -23,7 +23,7 @@
 
         <div class="contractSection">
           <div style="display: flex; flex-direction: row; justify-content: space-between; padding-left: 40%;">
-            <h4 class="text-muted"><em>Criação de aposta</em></h4>
+            <h4 class="text-muted"><em>Criaçao de aposta</em></h4>
             <button type="button" class="collapsibleCriarAposta" onclick="collapseCriarAposta()">
               - </button>
           </div>
@@ -68,7 +68,7 @@
         </div>
 
         <div class="contractSection">
-          <div style="display: flex; flex-direction: row; justify-content: space-between; padding-left: 40%;">
+          <div style="display: flex; flex-direction: row; justify-content: space-between; padding-left: 45%;">
             <h4 class="text-muted"><em>Apostar</em></h4>
             <button type="button" class="collapseApostarBtn" onclick="collapseApostar()">
               - </button>
@@ -78,7 +78,7 @@
               <div style="display: flex; flex-direction: row;">
                 <h6 class="my-0" style="padding-right: 10px;">Escolha o id da aposta:</h6>
                 <form action="">
-                  <select id="ApostarIdAposta">
+                  <select id="ApostarIdAposta" class="selectorsIdAposta">
                     <option>0</option>
                   </select>
                 </form>
@@ -111,45 +111,107 @@
             </form>
         </div>
 
+        </form>
+
+        <div class="contractSection">
+            <div style="display: flex; flex-direction: row; justify-content: space-between; padding-left: 40%;">
+              <h4 class="text-muted"><em>Visualizar Recompensa</em></h4>
+              <button type="button" class="collapsibleVerRecompensa" onclick="collapseVerRecompensa()">
+                - </button>
+            </div>
+            <ul class="list-ver-recompensa mb-3" class="list-ver-recompensa">
+              <li class="list-group-item d-flex justify-content-between lh-condensed">
+                <div>
+                  <form>
+                    <h6 class="my-0">Valor da recompensa:</h6>
+                    <span class="text-muted" id="idValorRecompensaGeral"></span>
+                    <br />
+                  </form>
+                </div>
+              </li>
+          </div>
+          
         <div class="contractSection">
           <div style="display: flex; flex-direction: row; justify-content: space-between; padding-left: 40%;">
-            <h4 class="text-muted"><em>Visualizar Recompensa</em></h4>
-            <button type="button" class="collapsibleVerRecompensa" onclick="collapseVerRecompensa()">
+            <h4 class="text-muted"><em>Finalizar Aposta</em></h4>
+            <button type="button" class="collapseFinalizarBtn" onclick="collapseFinalizar()">
               - </button>
           </div>
-          <ul class="list-ver-recompensa mb-3" class="list-ver-recompensa">
+          <ul class="list-finalizar mb-3" class="list-finalizar">
             <li class="list-group-item d-flex justify-content-between lh-condensed">
-              <div>
-                <form>
-                  <h6 class="my-0">Valor da recompensa:</h6>
-                  <span class="text-muted" id="idValorRecompensaGeral"></span>
-                  <br />
-                </form>
+              <div style="display: flex; flex-direction: row; justify-content:space-evenly; width: 100%;">
+                <div style="display: flex; flex-direction: row;">
+                  <h6 class="my-0" style="padding-right: 10px;">Escolha o id da aposta:</h6>
+                  <form action="">
+                    <select id="FinalizarIdAposta" class="selectorsIdAposta">
+                      <option>0</option>
+                    </select>
+                  </form>
+                </div>
+                <button type="button" id="btnFinalizar" class="btn btn-secondary">Finalizar
+                  Aposta</button>
+                <br />
               </div>
             </li>
+          </ul>
+          </ul>
         </div>
+        <br>
 
-      </form>
+        <div class="contractSection">
+          <div style="display: flex; flex-direction: row; justify-content: space-between; padding-left: 40%;">
+            <h4 class="text-muted"><em>Receber reconpensa</em></h4>
+          </div>
+          <ul class="list-finalizar mb-3" class="list-finalizar">
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div style="display: flex; flex-direction: row; justify-content:space-evenly; width: 100%;">
+                <div style="display: flex; flex-direction: row;">
+                  <h6 class="my-0" style="padding-right: 10px;">Escolha o id da aposta:</h6>
+                  <form action="">
+                    <select id="RRIdAposta" class="selectorsIdaRR">
+                      <option>0</option>
+                    </select>
+                  </form>
+                </div>
+                <button type="button" id="btnRR" class="btn btn-secondary"> Resgatar
+                  Recompensa</button>
+                <br />
+              </div>
+            </li>
+          </ul>
+          </ul>
+        </div>
+        <br>
+
       </div>
-      <br>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="js/abi.js"></script>
-    <script type="module" src="js/data.js"></script>
-    <script type="module" src="js/script.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+      <script src="js/abi.js"></script>
+      <script type="module" src="js/data.js"></script>
+      <script type="module" src="js/script.js"></script>
 
-    <script>
-      function collapseCriarAposta() {
-        listCriarAposta = document.getElementsByClassName("list-criar-aposta")[0];
-        listCriarAposta.style.display = listCriarAposta.style.display == 'none' ? 'block' : 'none';
-      }
-      function collapseApostar() {
-        listApostar = document.getElementsByClassName("list-apostar")[0];
-        listApostar.style.display = listApostar.style.display == 'none' ? 'block' : 'none';
-      }
+      <script>
+        function collapseList(listName) {
+          myList = document.getElementsByClassName(listName)[0];
+          myList.style.display = myList.style.display == 'none' ? 'block' : 'none';
+        }
+        function collapseCriarAposta() {
+          collapseList("list-criar-aposta")
+        }
 
-    </script>
+        function collapseApostar() {
+          collapseList("list-apostar")
+        }
+
+        function collapseFinalizar() {
+          collapseList("list-finalizar");
+        }
+
+        collapseList("list-criar-aposta")
+        collapseList("list-apostar")
+        collapseList("list-finalizar");
+
+      </script>
 </body>
 
 </html>
