@@ -111,8 +111,8 @@ function criarAposta() {
 }
 
 function apostar() {
-  let select = document.getElementById("ApostarIdAposta");
-  let apostaId = parseInt(select.options[select.selectedIndex].text);
+  let input = document.getElementById("ApostarIdAposta");
+  let apostaId = parseInt(input.value);
 
   console.log(apostas)
   let valorApostaAtual = BigInt(apostas.find(aposta => aposta.idAposta == apostaId).valorMinimo);
@@ -141,8 +141,8 @@ function apostar() {
 }
 
 function finalizarAposta() {
-  let select = document.getElementById("FinalizarIdAposta");
-  let apostaId = parseInt(select.options[select.selectedIndex].text);
+  let input = document.getElementById("FinalizarIdAposta");
+  let apostaId = parseInt(input.value);
 
   return DApp.contracts.CasaDeApostas.methods.finalizarAposta(apostaId).
     send({ from: DApp.account }).then((transaction) => {
@@ -152,8 +152,8 @@ function finalizarAposta() {
 
 }
 function receberMinhaRecompensa() {
-  let select = document.getElementById("RRIdAposta");
-  let apostaId = parseInt(select.options[select.selectedIndex].text);
+  let input = document.getElementById("RRIdAposta");
+  let apostaId = parseInt(input.value);
 
   return DApp.contracts.CasaDeApostas.methods.receberMinhaRecompensa(apostaId).
     send({ from: DApp.account }).then((transaction) => {
@@ -180,10 +180,6 @@ function removeOptions(selectElement) {
 }
 
 function atualizaInterface() {
-
-  removeOptions(document.getElementById("ApostarIdAposta"));
-  removeOptions(document.getElementById("FinalizarIdAposta"));
-  removeOptions(document.getElementById("RRIdAposta"));
 
   apostas.forEach(aposta => {
 
