@@ -1,6 +1,6 @@
 import { times, apostas, valorAposta } from "./data.js"
 // ENDEREÇO EHTEREUM DO CONTRATO
-var contractAddress = "0x1365dAb14Ac6624aFF122Be4c42720F3A83BeAC8"; 
+var contractAddress = "0x1365dAb14Ac6624aFF122Be4c42720F3A83BeAC8";
 
 // Inicializa o objeto DApp
 document.addEventListener("DOMContentLoaded", onDocumentLoad);
@@ -75,24 +75,23 @@ function criarAposta() {
 
   let pontos1 = parseInt(document.getElementById("pontos01").value);
   let pontos2 = parseInt(document.getElementById("pontos02").value);
-  //let valorMinimo = document.getElementById("valorMinimo").value;
-  let valor = valorAposta;
+  let valorMinimo = BigInt(parseInt(document.getElementById("valorMinimo").value) * valorAposta);
 
   if (time1 == undefined || time2 == undefined || pontos1 == undefined || pontos2 == undefined
-    || valor == undefined) {
+    || valorMinimo == undefined) {
     console.log({
       'time1': time1,
       'time2': time2,
       'pontos1': pontos1,
       'pontos2': pontos2,
-      'valorMinimo': valor
+      'valorMinimo': valorMinimo
     });
     alert('dado invalido');
     return;
   }
 
   return DApp.contracts.CasaDeApostas.methods.criarAposta(time1, pontos1, time2,
-    pontos2, valor).send({ from: DApp.account }).then((transacao) => {
+    pontos2, valorMinimo).send({ from: DApp.account }).then((transacao) => {
 
       let idAposta = parseInt(transacao.events['0'].raw.data);
       const aposta = {
@@ -101,7 +100,7 @@ function criarAposta() {
         'pontosTime1': pontos1,
         'time2': time2,
         'pontosTime2': pontos2,
-        'valorMinimo': valor,
+        'valorMinimo': valorMinimo,
         'finalizada': false,
       };
       apostas.push(aposta);
@@ -115,6 +114,8 @@ function apostar() {
   let select = document.getElementById("ApostarIdAposta");
   let apostaId = parseInt(select.options[select.selectedIndex].text);
 
+  console.log(apostas)
+  let valorApostaAtual = BigInt(apostas.find(aposta => aposta.idAposta == apostaId).valorMinimo);
 
   let pontos1 = parseInt(document.getElementById("ApostarPontuacao1").value);
   let pontos2 = parseInt(document.getElementById("ApostarPontuacao2").value);
@@ -127,14 +128,15 @@ function apostar() {
     alert("pontuacao invalida")
     return;
   }
-  console.log('valor da aposta: ' + valorAposta)
+
+  console.log('valor da aposta: ' + Number(valorApostaAtual))
   return DApp.contracts.CasaDeApostas.methods.apostar(apostaId, pontos1, pontos2).
-    send({ from: DApp.account, value: valorAposta }).then((transaction) => {
+    send({ from: DApp.account, value: Number(valorApostaAtual) }).then((transaction) => {
       alert("Aposta realizada!");
-    
+
       verRecompensa(apostaId).then((result) => {
         document.getElementById("idValorRecompensaGeral").innerHTML = result;
-        });
+      });
     });
 }
 
@@ -149,14 +151,14 @@ function finalizarAposta() {
     });
 
 }
-function receberMinhaRecompensa(){
+function receberMinhaRecompensa() {
   let select = document.getElementById("RRIdAposta");
   let apostaId = parseInt(select.options[select.selectedIndex].text);
 
   return DApp.contracts.CasaDeApostas.methods.receberMinhaRecompensa(apostaId).
     send({ from: DApp.account }).then((transaction) => {
       atualizaInterface()
-  });
+    });
 }
 
 // *** ATUALIZAÇÃO DO HTML *** //
@@ -166,7 +168,7 @@ function inicializaInterface() {
   document.getElementById("btnApostar").onclick = apostar;
   document.getElementById("btnFinalizar").onclick = finalizarAposta;
   document.getElementById("btnRR").onclick = receberMinhaRecompensa;
-  
+
   atualizaInterface();
 }
 
@@ -181,6 +183,7 @@ function atualizaInterface() {
 
   removeOptions(document.getElementById("ApostarIdAposta"));
   removeOptions(document.getElementById("FinalizarIdAposta"));
+  removeOptions(document.getElementById("RRIdAposta"));
 
   apostas.forEach(aposta => {
 
