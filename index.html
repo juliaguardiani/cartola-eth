@@ -23,7 +23,7 @@
 
         <div class="contractSection">
           <div style="display: flex; flex-direction: row; justify-content: space-between; padding-left: 40%;">
-            <h4 class="text-muted"><em>Criaçao de aposta</em></h4>
+            <h4 class="text-muted"><em>Criação de aposta</em></h4>
             <button type="button" class="collapsibleCriarAposta" onclick="collapseCriarAposta()">
               - </button>
           </div>
@@ -111,7 +111,25 @@
             </form>
         </div>
 
-        </form>
+        <div class="contractSection">
+          <div style="display: flex; flex-direction: row; justify-content: space-between; padding-left: 40%;">
+            <h4 class="text-muted"><em>Visualizar Recompensa</em></h4>
+            <button type="button" class="collapsibleVerRecompensa" onclick="collapseVerRecompensa()">
+              - </button>
+          </div>
+          <ul class="list-ver-recompensa mb-3" class="list-ver-recompensa">
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <form>
+                  <h6 class="my-0">Valor da recompensa:</h6>
+                  <span class="text-muted" id="idValorRecompensaGeral"></span>
+                  <br />
+                </form>
+              </div>
+            </li>
+        </div>
+
+      </form>
       </div>
       <br>
     </div>
